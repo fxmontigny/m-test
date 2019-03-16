@@ -10,7 +10,7 @@
 <script>
 import Menu from "@/components/Menu.vue";
 import axios from "axios";
-import store from "@/stores/CatStore";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -20,13 +20,14 @@ export default {
     return {};
   },
   methods: {
+    ...mapActions(["addBreeds"]),
     loadBreeds() {
       axios
         .get("https://api.thecatapi.com/v1/breeds?limit=20")
         .then(response => {
           console.log("-- Breeds from TheCatAPI.com");
           console.log(response.data);
-          store.setBreeds(response.data);
+          this.addBreeds(response.data);
           this.$router.replace("/cats"); // redirect to cats page
         });
     }

@@ -9,12 +9,12 @@
 
 <script>
 import axios from "axios";
-import store from "@/stores/CatStore";
+import { mapActions } from "vuex";
 
 export default {
   data() {
     return {
-      breeds: store.state.breeds,
+      breeds: [],
       breedsCountryOptions: [],
       breedCountrySelected: null
     };
@@ -27,6 +27,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["addCats"]),
     loadCats(breedId) {
       return axios
         .get("https://api.thecatapi.com/v1/images/search", {
@@ -54,11 +55,12 @@ export default {
 
       Promise.all(promise).then(() => {
         console.log("all cats", allCats);
-        store.setCats(allCats);
+        this.addCats(allCats);
       });
     }
   },
   mounted() {
+    this.breeds = this.$store.getters.getBreeds;
     // redirect to home page if no breeds
     if (this.breeds === null) {
       this.$router.replace("/");

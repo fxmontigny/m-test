@@ -2,7 +2,7 @@
   <div>
     <Menu/>
     <div class="wrapper">
-      <CatCards v-for="cat in state.cats" :key="cat.id" :cat="cat" class="cat-cards"></CatCards>
+      <CatCards v-for="cat in cats" :key="cat.id" :cat="cat" class="cat-cards"></CatCards>
     </div>
   </div>
 </template>
@@ -10,23 +10,16 @@
 <script>
 import Menu from "@/components/Menu.vue";
 import CatCards from "./CatCards.vue";
-import store from "@/stores/CatStore";
+import { mapState } from "vuex";
 
 export default {
   components: {
     Menu,
     CatCards
   },
-  data() {
-    return {
-      state: store.state
-    };
-  },
-  watch: {
-    state(newState, oldState) {
-      console.log("on change state", newState, oldState);
-    }
-  }
+  computed: mapState({
+    cats: state => state.cats.cats
+  })
 };
 </script>
 
