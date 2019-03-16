@@ -7,7 +7,34 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+import store from "@/stores/CatStore";
+
+export default {
+  data() {
+    return {
+      breeds: store.state.breeds
+    };
+  },
+  methods: {
+    loadCats(breed) {
+      axios
+        .get("https://api.thecatapi.com/v1/images/search", {
+          params: { limit: 10, size: "full", breed }
+        })
+        .then(response => {
+          console.log("-- Image from TheCatAPI.com");
+          console.log(response.data);
+        });
+    }
+  },
+  mounted() {
+    // redirect to home page if no breeds
+    if (this.breeds === null) {
+      this.$router.replace("/");
+    }
+  }
+};
 </script>
 
 <style scoped>

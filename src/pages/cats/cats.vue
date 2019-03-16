@@ -15,6 +15,7 @@
 <script>
 import Menu from "@/components/Menu.vue";
 import CatCards from "./CatCards.vue";
+import store from "@/stores/CatStore";
 
 export default {
   components: {
@@ -22,9 +23,7 @@ export default {
     CatCards
   },
   data() {
-    return {
-      msg: "Welcome to Your Vue.js App"
-    };
+    return {};
   }
 };
 </script>
