@@ -97,6 +97,7 @@ export default {
   padding: 0 45px;
   margin: 0;
   flex: 1;
+  text-transform: uppercase;
 }
 
 select {
