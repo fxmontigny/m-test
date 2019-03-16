@@ -2,12 +2,7 @@
   <div>
     <Menu/>
     <div class="wrapper">
-      <CatCards class="cat-cards"/>
-      <CatCards class="cat-cards"/>
-      <CatCards class="cat-cards"/>
-      <CatCards class="cat-cards"/>
-      <CatCards class="cat-cards"/>
-      <CatCards class="cat-cards"/>
+      <CatCards v-for="cat in state.cats" :key="cat.id" :cat="cat" class="cat-cards"></CatCards>
     </div>
   </div>
 </template>
@@ -23,7 +18,14 @@ export default {
     CatCards
   },
   data() {
-    return {};
+    return {
+      state: store.state
+    };
+  },
+  watch: {
+    state(newState, oldState) {
+      console.log("on change state", newState, oldState);
+    }
   }
 };
 </script>

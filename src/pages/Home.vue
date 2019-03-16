@@ -22,7 +22,7 @@ export default {
   methods: {
     loadBreeds() {
       axios
-        .get("https://api.thecatapi.com/v1/breeds?limit=5")
+        .get("https://api.thecatapi.com/v1/breeds?limit=20")
         .then(response => {
           console.log("-- Breeds from TheCatAPI.com");
           console.log(response.data);

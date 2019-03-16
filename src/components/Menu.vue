@@ -2,7 +2,7 @@
   <div class="main">
     <div class="wrapper">
       <p>The cat website</p>
-      <b-form-select v-model="breedSelected" :options="breedsOptions"/>
+      <b-form-select v-model="breedCountrySelected" :options="breedsCountryOptions"/>
     </div>
   </div>
 </template>
@@ -15,30 +15,47 @@ export default {
   data() {
     return {
       breeds: store.state.breeds,
-      breedsOptions: [],
-      breedSelected: null
+      breedsCountryOptions: [],
+      breedCountrySelected: null
     };
   },
   watch: {
-    breedSelected(newBreed, olBreed) {
-      console.log("on change breed", newBreed, olBreed);
+    breedCountrySelected(countryCode, oldCountryCode) {
+      console.log("on change breed", countryCode, oldCountryCode);
 
-      this.loadCats(newBreed);
+      this.loadAllCats(countryCode);
     }
   },
   methods: {
     loadCats(breedId) {
-      axios
-        .get(
-          "https://api.thecatapi.com/v1/images/search?breed_ids=" + breedId,
-          {
-            params: { limit: 10, size: "full" }
-          }
-        )
+      return axios
+        .get("https://api.thecatapi.com/v1/images/search", {
+          params: { breed_ids: breedId, limit: 5 }
+        })
         .then(response => {
-          console.log("-- Image from TheCatAPI.com");
+          console.log(`-- Cats from breedId ${breedId} TheCatAPI.com`);
           console.log(response.data);
+          return response.data;
         });
+    },
+    loadAllCats(breedCountryCode) {
+      const promise = [];
+      let allCats = [];
+
+      this.breeds
+        .filter(x => x.country_code === breedCountryCode)
+        .map(b => {
+          promise.push(
+            this.loadCats(b.id).then(cats => {
+              allCats = allCats.concat(cats);
+            })
+          );
+        });
+
+      Promise.all(promise).then(() => {
+        console.log("all cats", allCats);
+        store.setCats(allCats);
+      });
     }
   },
   mounted() {
@@ -47,14 +64,15 @@ export default {
       this.$router.replace("/");
     } else {
       // prepare list with value and text
-      this.breedsOptions = [];
-      this.breeds.map((b, index) => {
-        this.breedsOptions.push({ value: b.id, text: b.name });
-
-        if (index === 0) {
-          this.breedSelected = b.id;
+      const list = {};
+      this.breeds.map(b => {
+        if (list.hasOwnProperty(b.country_code) === false) {
+          list[b.country_code] = { value: b.country_code, text: b.origin };
         }
       });
+
+      this.breedsCountryOptions = Object.values(list);
+      this.breedCountrySelected = this.breedsCountryOptions[0].value;
     }
   }
 };
