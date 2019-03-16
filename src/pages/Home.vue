@@ -34,6 +34,8 @@ export default {
   },
   mounted() {
     console.log("mounted");
+    axios.defaults.headers.common["Api-User-Agent"] =
+      "fxaviermontigny@gmail.com";
     axios.defaults.headers.common["x-api-key"] =
       "58cb7e37-3f3a-4ca4-97d3-e16d9daaaaef"; // Replace this with your API Key
 

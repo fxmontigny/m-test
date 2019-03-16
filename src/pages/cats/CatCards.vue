@@ -10,7 +10,7 @@
         <button>Details</button>
       </div>
     </div>
-    <Modal v-if="showPopup" :cat="cat"/>
+    <Modal v-if="showPopup" :cat="cat" @close="onClosePopup"/>
   </div>
 </template>
 
@@ -30,9 +30,11 @@ export default {
     };
   },
   methods: {
-    onShowPopup: () => {
-      console.log("show");
+    onShowPopup() {
       this.showPopup = true;
+    },
+    onClosePopup() {
+      this.showPopup = false;
     }
   }
 };

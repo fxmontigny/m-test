@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" @click="onClose">
     <div class="container">
       <img :src="cat.url">
       <div>
@@ -23,8 +23,26 @@ export default {
     };
   },
   watch: {},
-  methods: {},
-  mounted() {}
+  methods: {
+    onClose() {
+      this.$emit("close");
+    },
+    loadDescription() {
+      axios
+        .get(
+          "https://en.wikipedia.org/api/rest_v1/page/summary/" +
+            this.cat.breeds[0].name +
+            "_cat"
+        )
+        .then(response => {
+          console.log(response.data);
+          this.description = response.data.extract_html;
+        });
+    }
+  },
+  mounted() {
+    this.loadDescription();
+  }
 };
 </script>
 
@@ -54,6 +72,7 @@ export default {
 }
 
 img {
-  width: 100%;
+  height: 200px;
+  margin-right: 32px;
 }
 </style>
